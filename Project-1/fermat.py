@@ -1,7 +1,6 @@
 import argparse
 import random
 import sys
-sys.setrecursionlimit(4000)
 
 
 # This is a convenience function for main(). You don't need to touch it.
@@ -58,15 +57,16 @@ def miller_rabin(N: int, k: int) -> str:
         z = N - 1
         a = random.randint(1,z)
         if mod_exp(a,z,N) == 1:
-            while z != 0:
+            while z % 2 == 0:
                 z = z//2
-                v = mod_exp(a,z,N)
-                if v == 1:
-                    continue
-                elif v == N-1:
-                    break
-                else:
-                    return "composite"
+                if z % 2 == 0:
+                    v = mod_exp(a, z, N)
+                    if v == 1:
+                        continue
+                    elif v == N - 1:
+                        break
+                    else:
+                        return "composite"
         else:
             return "composite"
     return "prime"

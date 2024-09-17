@@ -37,6 +37,14 @@ def generate_large_prime(bits=512) -> int:
     Use random.getrandbits(bits) to generate a random number of the
      specified bit length.
     """
+
+    random_number = random.getrandbits(bits)
+    if miller_rabin(random_number,20) == "prime":
+        return random_number
+    else:
+        generate_large_prime(bits)
+
+
     return 5  # Guaranteed random prime number obtained through fair dice roll
 
 
@@ -48,4 +56,20 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
     - N must be the product of two random prime numbers p and q
     - e and d must be multiplicative inverses mod (p-1)(q-1)
     """
-    return 0, 0, 0
+
+    p = generate_large_prime(bits)
+    q = generate_large_prime(bits)
+    N = p * q
+    e = 1
+    for prime in primes:
+        (x, y, z) = ext_euclid((p-1)*(q-1), prime)
+        if z == 1:
+            e = prime
+        else:
+            continue
+    if e == 1  :
+        print("prime values for e did not work")
+
+    d = 
+
+    return N, e, d
