@@ -1,0 +1,46 @@
+{
+    "tests": [
+        {
+            "score": 10,
+            "max_score": 10,
+            "name": "test_fermat.py::test_mod_exp",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 5,
+            "max_score": 5,
+            "name": "test_fermat.py::test_primes_fermat",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 5,
+            "max_score": 5,
+            "name": "test_fermat.py::test_composites_fermat",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 10,
+            "max_score": 10,
+            "name": "test_fermat.py::test_composites_miller_rabin",
+            "output": "\n",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 20,
+            "name": "test_euclid.py::test_key_pair_encoding_decoding",
+            "output": "\n@max_score(20)\n    def test_key_pair_encoding_decoding():\n        \"\"\"Test RSA key pairs for various bit sizes to ensure encoding and decoding work correctly.\"\"\"\n    \n        for bits in [64, 128, 256, 512, 1024]:\n    \n            # Generate key pairs\n            N, e, d = generate_key_pairs(bits)\n    \n            # Ensure that N is large enough to encrypt/decrypt a message of the given bit size\n            message: int = random.getrandbits(int(bits / 4))\n    \n            # Encrypt the message\n            ciphertext = mod_exp(message, e, N)\n    \n            # Decrypt the message\n            decrypted_message = mod_exp(ciphertext, d, N)\n    \n            # Check that the decrypted message matches the original message\n>           assert (\n                message == decrypted_message\n            ), f\"Failed for bit size {bits}: message={message}, decrypted_message={decrypted_message}\"\nE           AssertionError: Failed for bit size 64: message=57493, decrypted_message=1\nE           assert 57493 == 1\n\nProject-1\\test_euclid.py:26: AssertionError",
+            "visibility": "visible"
+        },
+        {
+            "score": 0,
+            "max_score": 10,
+            "name": "test_fermat.py::test_primes_miller_rabin",
+            "output": "\n@max_score(10)\n    def test_primes_miller_rabin() -> None:\n        \"\"\"This function tests multiple known prime numbers to verify that your\n        miller_rabin primality tests return 'prime'\"\"\"\n        for N in prime_args:\n            call = miller_rabin(N, 100)\n>           assert call == \"prime\"\nE           AssertionError: assert 'composite' == 'prime'\nE             - prime\nE             + composite\n\nProject-1\\test_fermat.py:42: AssertionError",
+            "visibility": "visible"
+        }
+    ]
+}

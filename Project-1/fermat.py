@@ -9,17 +9,23 @@ def prime_test(N: int, k: int) -> tuple[str, str]:
 
 # You will need to implement this function and change the return value.
 def mod_exp(x: int, y: int, N: int) -> int:
-    return 0
+    if y == 0: return 1
+    z = mod_exp(x,y//2,N)
+    if y % 2 == 0:
+        return (z**2) % N
+    else:
+        return (x*(z**2)) % N
 
 
 # You will need to implement this function and change the return value.
 def fprobability(k: int) -> float:
-    return 0
+    return 1/(2**k)
 
 
 # You will need to implement this function and change the return value.
 def mprobability(k: int) -> float:
-    return 0
+    return 1/(4**k)
+
 
 
 # You will need to implement this function and change the return value, which should be
@@ -29,7 +35,13 @@ def mprobability(k: int) -> float:
 # random.randint(low, hi) which gives a random integer between low and
 # hi, inclusive.
 def fermat(N: int, k: int) -> str:
-    return "???"
+    z = N-1
+    for w in range(k):
+        a = random.randint(1,z)
+        if mod_exp(a,z,N) != 1:
+            return "composite"
+    return "prime"
+
 
 
 # You will need to implement this function and change the return value, which should be
@@ -39,7 +51,23 @@ def fermat(N: int, k: int) -> str:
 # random.randint(low, hi) which gives a random integer between low and
 # hi, inclusive.
 def miller_rabin(N: int, k: int) -> str:
-    return "???"
+    a_list = []
+    z = N - 1
+    for w in range(k):
+        a = random.randint(1,z)
+        if mod_exp(a,z,N) == 1:
+            while (z != 0):
+                z = z//2
+                v = mod_exp(a,z,N)
+                if v == 1:
+                    continue
+                elif v == -1:
+                    break
+                else:
+                    return "composite"
+        else:
+            return "composite"
+    return "prime"
 
 
 def main(number: int, k: int):
