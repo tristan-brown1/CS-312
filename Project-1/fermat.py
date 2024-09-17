@@ -59,7 +59,7 @@ def miller_rabin(N: int, k: int) -> str:
         a = random.randint(1,z)
         if mod_exp(a,z,N) == 1:
             while z != 0:
-                z = z/2
+                z = z//2
                 v = mod_exp(a,z,N)
                 if v == 1:
                     continue
