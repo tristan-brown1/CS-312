@@ -1,5 +1,7 @@
 import argparse
 import random
+import sys
+sys.setrecursionlimit(4000)
 
 
 # This is a convenience function for main(). You don't need to touch it.
@@ -52,16 +54,16 @@ def fermat(N: int, k: int) -> str:
 # hi, inclusive.
 def miller_rabin(N: int, k: int) -> str:
     a_list = []
-    z = N - 1
     for w in range(k):
+        z = N - 1
         a = random.randint(1,z)
         if mod_exp(a,z,N) == 1:
-            while (z != 0):
-                z = z//2
+            while z != 0:
+                z = z/2
                 v = mod_exp(a,z,N)
                 if v == 1:
                     continue
-                elif v == -1:
+                elif v == N-1:
                     break
                 else:
                     return "composite"
