@@ -1,6 +1,8 @@
 import random
 import sys
 
+from numpy.f2py.auxfuncs import throw_error
+
 # This may come in handy...
 from fermat import miller_rabin
 
@@ -27,7 +29,12 @@ def ext_euclid(a: int, b: int) -> tuple[int, int, int]:
 
     Note: a must be greater than b
     """
-    return 0, 0, 0
+    if a <= b:
+        a,b = b,a
+    if b == 0: return 1,0,a
+
+    x,y,d = ext_euclid(b,a % b)
+    return y,x - ((a//b)*y),d
 
 
 # Implement this function
@@ -42,10 +49,8 @@ def generate_large_prime(bits=512) -> int:
     if miller_rabin(random_number,20) == "prime":
         return random_number
     else:
-        generate_large_prime(bits)
+        return generate_large_prime(bits)
 
-
-    return 5  # Guaranteed random prime number obtained through fair dice roll
 
 
 # Implement this function
@@ -61,15 +66,16 @@ def generate_key_pairs(bits: int) -> tuple[int, int, int]:
     q = generate_large_prime(bits)
     N = p * q
     e = 1
+    d = 1
     for prime in primes:
-        (x, y, z) = ext_euclid((p-1)*(q-1), prime)
+        x, y, z = ext_euclid((p-1)*(q-1), prime)
         if z == 1:
             e = prime
+            d = y
+            break
         else:
             continue
     if e == 1  :
-        print("prime values for e did not work")
+        throw_error("prime values for e did not work")
 
-    d = 
-
-    return N, e, d
+    return N, e, d % ((p-1)*(q-1))
