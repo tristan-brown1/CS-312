@@ -52,7 +52,6 @@ def fermat(N: int, k: int) -> str:
 # random.randint(low, hi) which gives a random integer between low and
 # hi, inclusive.
 def miller_rabin(N: int, k: int) -> str:
-    a_list = []
     for w in range(k):
         z = N - 1
         a = random.randint(1,z)
