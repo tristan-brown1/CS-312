@@ -1,6 +1,5 @@
 import argparse
 import random
-import sys
 
 
 # This is a convenience function for main(). You don't need to touch it.
