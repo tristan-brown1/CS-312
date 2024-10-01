@@ -18,14 +18,32 @@ class Node:
 
     def getX(self):
         return self.x
+    
     def getY(self):
         return self.y
+    
+    def get_right(self):
+        return self.right
+    
+    def get_left(self):
+        return self.left
 
-def calculate_upper():
+
+def calculate_slope(c: Node,d: Node):
+    return (c.getX - d.getX)/(c.getY - d.getY)
+
+def calculate_upper(a: Node, b: Node):
 # this part will handle the lower bound calculations
+    a_mod = a
+    b_mod = b
+    a_mod2 = a
+    b_mod2 = b
 
+    a_mod.set_right(b_mod)
+    a_mod2.set_right(b_mod.get_right)
+    if (calculate_slope())
 
-    pass
+    return a,b
 
 def calculate_lower():
 # this part will handle the upper bound calculations
