@@ -71,7 +71,9 @@ def hull_algorithm(node_list: list[Node]):
     leftmost_node = calculate_leftmost(right_hull)
     rightmost_node = calculate_rightmost(left_hull)
 
+    calculate_upper
     
+    calculate_lower
 
 
     return node_list
