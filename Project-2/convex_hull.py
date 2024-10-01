@@ -34,8 +34,10 @@ def calculate_lower():
     pass
 
 def calculate_rightmost(node_list: list[Node]):
-    rightmost_node = 0
+    rightmost_node = None
     for x in node_list:
+        if rightmost_node == None:
+            rightmost_node = x.x
         if x.x > rightmost_node:
             rightmost_node = x.x
         else:
@@ -44,8 +46,10 @@ def calculate_rightmost(node_list: list[Node]):
     
 
 def calculate_leftmost(node_list: list[Node]):
-    leftmost_node = 0
+    leftmost_node = None
     for x in node_list:
+        if leftmost_node == None:
+            leftmost_node = x.x
         if x.x < leftmost_node:
             leftmost_node = x.x
         else:
@@ -66,6 +70,9 @@ def hull_algorithm(node_list: list[Node]):
 
     leftmost_node = calculate_leftmost(right_hull)
     rightmost_node = calculate_rightmost(left_hull)
+
+    
+
 
     return node_list
 
