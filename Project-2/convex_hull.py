@@ -32,17 +32,24 @@ class Node:
 def calculate_slope(c: Node,d: Node):
     return (c.getX - d.getX)/(c.getY - d.getY)
 
+def calculate_highest_slope(a: Node, b: Node):
+    a_mod = a
+    a_mod2 = a
+    
+    a_mod.set_right(b)
+    a_mod2.set_right(b.get_right)
+
+    if (calculate_slope(a_mod,a_mod.get_right) >= calculate_slope(a_mod2,a_mod2.get_right)):
+        a.set_right(a_mod.get_right)
+    else:
+        a.set_right(a_mod2.get_right)
+
+    return a 
+
 def calculate_upper(a: Node, b: Node):
 # this part will handle the lower bound calculations
-    a_mod = a
-    b_mod = b
-    a_mod2 = a
-    b_mod2 = b
-
-    a_mod.set_right(b_mod)
-    a_mod2.set_right(b_mod.get_right)
-    if (calculate_slope()):
-        pass
+    a = calculate_highest_slope(a,b)
+    b = calculate_highest_slope(b,a)
 
     return a,b
 
