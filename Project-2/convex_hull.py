@@ -9,7 +9,13 @@ class Node:
         self.y = y
         self.right = right
         self.left = left
-    
+
+    def set_right(self, new_node):
+        self.right = new_node
+
+    def set_left(self, new_node):
+        self.left = new_node
+
     def getX(self):
         return self.x
     def getY(self):
@@ -24,6 +30,14 @@ def calculate_upper():
 def calculate_lower():
 # this part will handle the upper bound calculations
 
+
+    pass
+
+def calculate_rightmost():
+
+    pass
+
+def calculate_leftmost():
 
     pass
 
@@ -49,7 +63,11 @@ def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]
     linked_list = []
     result_list = []
     for element in sorted(points):
-        linked_list.append(Node(element[0],element[1]))
+        new_node = Node(element[0], element[1])
+        new_node.set_right(new_node)
+        new_node.set_left(new_node)
+        linked_list.append(new_node)
+
 
     linked_list = hull_algorithm(linked_list)
 
