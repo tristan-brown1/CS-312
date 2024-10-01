@@ -41,7 +41,8 @@ def calculate_upper(a: Node, b: Node):
 
     a_mod.set_right(b_mod)
     a_mod2.set_right(b_mod.get_right)
-    if (calculate_slope())
+    if (calculate_slope()):
+        pass
 
     return a,b
 
