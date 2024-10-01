@@ -33,13 +33,24 @@ def calculate_lower():
 
     pass
 
-def calculate_rightmost():
+def calculate_rightmost(node_list: list[Node]):
+    rightmost_node = 0
+    for x in node_list:
+        if x.x > rightmost_node:
+            rightmost_node = x.x
+        else:
+            continue
+    return rightmost_node
+    
 
-    pass
-
-def calculate_leftmost():
-
-    pass
+def calculate_leftmost(node_list: list[Node]):
+    leftmost_node = 0
+    for x in node_list:
+        if x.x < leftmost_node:
+            leftmost_node = x.x
+        else:
+            continue
+    return leftmost_node
 
 def hull_algorithm(node_list: list[Node]):
 # this part will handle the linked list and recurse
@@ -53,8 +64,8 @@ def hull_algorithm(node_list: list[Node]):
     left_hull = hull_algorithm(L)
     right_hull = hull_algorithm(R)
 
-    
-
+    leftmost_node = calculate_leftmost(right_hull)
+    rightmost_node = calculate_rightmost(left_hull)
 
     return node_list
 
