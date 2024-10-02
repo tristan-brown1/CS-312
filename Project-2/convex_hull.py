@@ -48,15 +48,13 @@ def calculate_slope(c: Node,d: Node):
 
 def calculate_upper(a: Node, b: Node):
 # this part will handle the lower bound calculations
-
-    # a = calculate_highest_slope(a,b)
-    # b = calculate_highest_slope(b,a)
-    a_mod = a
-    a_mod2 = a
     
     a_changed = True
     b_changed = True
+
     while  a_changed == True or b_changed == True:
+        a_mod = a
+        a_mod2 = a
         
         while a_changed == True :
             a_changed = False
@@ -68,10 +66,11 @@ def calculate_upper(a: Node, b: Node):
                 
             else:
                 a.set_clockwise(a_mod2.get_clockwise)
+                b = a_mod2.get_clockwise
                 a_changed = True
 
-        b_mod = a.get_clockwise
-        b_mod2 = a.get_clockwise
+        b_mod = b
+        b_mod2 = b
 
         while b_changed == True:
             b_changed = False
@@ -83,6 +82,7 @@ def calculate_upper(a: Node, b: Node):
                 
             else:
                 b.set_counter_clockwise(b_mod2.get_counter_clockwise)
+                a = b_mod2.get_counter_clockwise
                 b_changed == True
 
         a_mod = b.get_counter_clockwise
@@ -97,8 +97,6 @@ def calculate_lower(a: Node, b: Node):
     b_changed = True
     while  a_changed == True or b_changed == True:
         
-
-            ###KEEP WORKING FROM HERE ON CLOCKWISE V COUNTER CLOCKWISE
         a_mod = a
         a_mod2 = a
 
@@ -130,8 +128,6 @@ def calculate_lower(a: Node, b: Node):
                 b.set_clockwise(b_mod2.get_clockwise)
                 a = b_mod2.get_clockwise
                 b_changed == True
-
-        
 
     return a,b
 
