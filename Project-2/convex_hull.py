@@ -92,9 +92,6 @@ def calculate_upper(a: Node, b: Node):
 
 def calculate_lower(a: Node, b: Node):
 # this part will handle the lower bound calculations
-
-    a_mod = a
-    a_mod2 = a
     
     a_changed = True
     b_changed = True
@@ -102,8 +99,8 @@ def calculate_lower(a: Node, b: Node):
         
 
             ###KEEP WORKING FROM HERE ON CLOCKWISE V COUNTER CLOCKWISE
-
-
+        a_mod = a
+        a_mod2 = a
 
         while a_changed == True :
             a_changed = False
@@ -114,26 +111,27 @@ def calculate_lower(a: Node, b: Node):
                 a.set_counter_clockwise(a_mod.get_counter_clockwise)
                 
             else:
-                a.set_clockwise(a_mod2.get_clockwise)
+                a.set_counter_clockwise(a_mod2.get_counter_clockwise)
+                b = a_mod2.get_counter_clockwise
                 a_changed = True
 
-        b_mod = a.get_clockwise
-        b_mod2 = a.get_clockwise
+        b_mod = b
+        b_mod2 = b
 
         while b_changed == True:
             b_changed = False
-            b_mod.set_counter_clockwise(a)
-            b_mod2.set_counter_clockwise(a.get_counter_clockwise)
+            b_mod.set_clockwise(a)
+            b_mod2.set_clockwise(a.get_clockwise)
 
-            if (calculate_slope(b_mod,b_mod.get_counter_clockwise) >= calculate_slope(b_mod2,b_mod2.get_counter_clockwise)):
-                b.set_counter_clockwise(b_mod.get_counter_clockwise)
+            if (calculate_slope(b_mod,b_mod.get_clockwise) >= calculate_slope(b_mod2,b_mod2.get_clockwise)):
+                b.set_clockwise(b_mod.get_clockwise)
                 
             else:
-                b.set_counter_clockwise(b_mod2.get_counter_clockwise)
+                b.set_clockwise(b_mod2.get_clockwise)
+                a = b_mod2.get_clockwise
                 b_changed == True
 
-        a_mod = b.get_counter_clockwise
-        a_mod2 = b.get_counter_clockwise
+        
 
     return a,b
 
