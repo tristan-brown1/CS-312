@@ -79,7 +79,7 @@ def calculate_upper(a: Node, b: Node):
             b_mod.set_counter_clockwise(a)
             b_mod2.set_counter_clockwise(a.get_counter_clockwise)
 
-            if (calculate_slope(b_mod,b_mod.get_counter_clockwise) >= calculate_slope(b_mod2,b_mod2.get_counter_clockwise)):
+            if (calculate_slope(b_mod,b_mod.get_counter_clockwise) <= calculate_slope(b_mod2,b_mod2.get_counter_clockwise)):
                 b.set_counter_clockwise(b_mod.get_counter_clockwise)
                 
             else:
@@ -87,8 +87,8 @@ def calculate_upper(a: Node, b: Node):
                 a = b_mod2.get_counter_clockwise
                 b_changed == True
 
-        a_mod = b.get_counter_clockwise
-        a_mod2 = b.get_counter_clockwise
+        # a_mod = b.get_counter_clockwise
+        # a_mod2 = b.get_counter_clockwise
 
     return a,b
 
@@ -136,10 +136,10 @@ def calculate_lower(a: Node, b: Node):
 def calculate_rightmost(node_list: list[Node]):
     rightmost_node = None
     for x in node_list:
-        if rightmost_node == None:
-            rightmost_node = x.x
-        if x.x > rightmost_node:
-            rightmost_node = x.x
+        if rightmost_node is None:
+            rightmost_node = x
+        elif x.x > rightmost_node.x:
+            rightmost_node = x
         else:
             continue
     return rightmost_node
@@ -148,10 +148,10 @@ def calculate_rightmost(node_list: list[Node]):
 def calculate_leftmost(node_list: list[Node]):
     leftmost_node = None
     for x in node_list:
-        if leftmost_node == None:
-            leftmost_node = x.x
-        if x.x < leftmost_node:
-            leftmost_node = x.x
+        if leftmost_node is None:
+            leftmost_node = x
+        elif x.x < leftmost_node.x:
+            leftmost_node = x
         else:
             continue
     return leftmost_node
@@ -175,7 +175,7 @@ def hull_algorithm(node_list: list[Node]):
     if n == 1:
         return node_list
 
-    L = node_list[0:n//2]
+    L = node_list[:n//2]
     R = node_list[n//2:]
 
     left_hull = hull_algorithm(L)
@@ -195,13 +195,12 @@ def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]
     """Return the subset of provided points that define the convex hull"""
     linked_list = []
     result_list = []
+
     for element in sorted(points):
         new_node = Node(element[0], element[1])
         new_node.set_clockwise(new_node)
         new_node.set_counter_clockwise(new_node)
         linked_list.append(new_node)
-
-
     linked_list = hull_algorithm(linked_list)
 
     for node in linked_list:
