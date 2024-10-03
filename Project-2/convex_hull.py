@@ -4,11 +4,11 @@ from plotting import draw_line, draw_hull, circle_point
 
 
 class Node:
-    def __init__(self,x, y, clockwise=0, counter_clockwise=0):
+    def __init__(self,x, y, clockwise, counter_clockwise):
         self.x = x
         self.y = y
-        self.clockwise = clockwise
-        self.counter_clockwise = counter_clockwise
+        self.clockwise : Node = clockwise
+        self.counter_clockwise: Node = counter_clockwise
 
     def set_clockwise(self, new_node):
         self.clockwise = new_node
@@ -32,7 +32,7 @@ class Node:
 
 
 def calculate_slope(c: Node,d: Node):
-    return (d.getY - c.getY)/(d.getX - c.getX)
+    return (d.y - c.y)/(d.x - c.x)
 
 # def calculate_highest_slope(a: Node, b: Node):
 #     a_mod = a
@@ -48,6 +48,47 @@ def calculate_slope(c: Node,d: Node):
 
 #     return a 
 
+def calculate_lower(a: Node, b: Node):
+# this part will handle the lower bound calculations
+    
+    a_changed = True
+    b_changed = True
+
+    while  a_changed == True or b_changed == True:
+        a_mod = a
+        a_mod2 = a
+        
+        while a_changed:
+            a_changed = False
+            a_mod.set_clockwise(b)
+            a_mod2.set_clockwise(b.get_clockwise())
+
+            if calculate_slope(a_mod, a_mod.get_clockwise()) >= calculate_slope(a_mod2, a_mod2.get_clockwise()):
+                a.set_clockwise(a_mod.get_clockwise())
+                
+            else:
+                a.set_clockwise(a_mod2.get_clockwise())
+                b = a_mod2.get_clockwise()
+                a_changed = True
+
+        b_mod = b
+        b_mod2 = b
+
+        while b_changed:
+            b_changed = False
+            b_mod.set_counter_clockwise(a)
+            b_mod2.set_counter_clockwise(a.get_counter_clockwise())
+
+            if calculate_slope(b_mod, b_mod.get_counter_clockwise()) <= calculate_slope(b_mod2, b_mod2.get_counter_clockwise()):
+                b.set_counter_clockwise(b_mod.get_counter_clockwise())
+                
+            else:
+                b.set_counter_clockwise(b_mod2.get_counter_clockwise())
+                a = b_mod2.get_counter_clockwise()
+                b_changed = True
+
+    return a,b
+
 def calculate_upper(a: Node, b: Node):
 # this part will handle the lower bound calculations
     
@@ -55,81 +96,38 @@ def calculate_upper(a: Node, b: Node):
     b_changed = True
 
     while  a_changed == True or b_changed == True:
-        a_mod = a
-        a_mod2 = a
-        
-        while a_changed == True :
-            a_changed = False
-            a_mod.set_clockwise(b)
-            a_mod2.set_clockwise(b.get_clockwise)
-
-            if (calculate_slope(a_mod,a_mod.get_clockwise) >= calculate_slope(a_mod2,a_mod2.get_clockwise)):
-                a.set_clockwise(a_mod.get_clockwise)
-                
-            else:
-                a.set_clockwise(a_mod2.get_clockwise)
-                b = a_mod2.get_clockwise
-                a_changed = True
-
-        b_mod = b
-        b_mod2 = b
-
-        while b_changed == True:
-            b_changed = False
-            b_mod.set_counter_clockwise(a)
-            b_mod2.set_counter_clockwise(a.get_counter_clockwise)
-
-            if (calculate_slope(b_mod,b_mod.get_counter_clockwise) <= calculate_slope(b_mod2,b_mod2.get_counter_clockwise)):
-                b.set_counter_clockwise(b_mod.get_counter_clockwise)
-                
-            else:
-                b.set_counter_clockwise(b_mod2.get_counter_clockwise)
-                a = b_mod2.get_counter_clockwise
-                b_changed == True
-
-        # a_mod = b.get_counter_clockwise
-        # a_mod2 = b.get_counter_clockwise
-
-    return a,b
-
-def calculate_lower(a: Node, b: Node):
-# this part will handle the lower bound calculations
-    
-    a_changed = True
-    b_changed = True
-    while  a_changed == True or b_changed == True:
         
         a_mod = a
         a_mod2 = a
 
-        while a_changed == True :
+        while a_changed:
             a_changed = False
             a_mod.set_counter_clockwise(b)
-            a_mod2.set_counter_clockwise(b.get_counter_clockwise)
+            a_mod2.set_counter_clockwise(b.get_counter_clockwise())
 
-            if (calculate_slope(a_mod,a_mod.get_counter_clockwise) <= calculate_slope(a_mod2,a_mod2.get_counter_clockwise)):
-                a.set_counter_clockwise(a_mod.get_counter_clockwise)
+            if calculate_slope(a_mod, a_mod.get_counter_clockwise()) <= calculate_slope(a_mod2, a_mod2.get_counter_clockwise()):
+                a.set_counter_clockwise(a_mod.get_counter_clockwise())
                 
             else:
-                a.set_counter_clockwise(a_mod2.get_counter_clockwise)
-                b = a_mod2.get_counter_clockwise
+                a.set_counter_clockwise(a_mod2.get_counter_clockwise())
+                b = a_mod2.get_counter_clockwise()
                 a_changed = True
 
         b_mod = b
         b_mod2 = b
 
-        while b_changed == True:
+        while b_changed:
             b_changed = False
             b_mod.set_clockwise(a)
-            b_mod2.set_clockwise(a.get_clockwise)
+            b_mod2.set_clockwise(a.get_clockwise())
 
-            if (calculate_slope(b_mod,b_mod.get_clockwise) >= calculate_slope(b_mod2,b_mod2.get_clockwise)):
-                b.set_clockwise(b_mod.get_clockwise)
+            if calculate_slope(b_mod, b_mod.get_clockwise()) >= calculate_slope(b_mod2, b_mod2.get_clockwise()):
+                b.set_clockwise(b_mod.get_clockwise())
                 
             else:
-                b.set_clockwise(b_mod2.get_clockwise)
-                a = b_mod2.get_clockwise
-                b_changed == True
+                b.set_clockwise(b_mod2.get_clockwise())
+                a = b_mod2.get_clockwise()
+                b_changed = True
 
     return a,b
 
@@ -184,8 +182,8 @@ def hull_algorithm(node_list: list[Node]):
     leftmost_node = calculate_leftmost(right_hull)
     rightmost_node = calculate_rightmost(left_hull)
 
-    corrected_top_left, corrected_top_right = calculate_upper(leftmost_node,rightmost_node)
-    corrected_bot_left, corrected_bot_right = calculate_lower(leftmost_node,rightmost_node)
+    corrected_top_right, corrected_top_left = calculate_upper(leftmost_node,rightmost_node)
+    corrected_bot_right, corrected_bot_left = calculate_lower(leftmost_node,rightmost_node)
 
     node_list = merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right)
 
