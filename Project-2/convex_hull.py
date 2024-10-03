@@ -4,7 +4,7 @@ from plotting import draw_line, draw_hull, circle_point
 
 
 class Node:
-    def __init__(self,x, y, clockwise, counter_clockwise):
+    def __init__(self,x, y, clockwise = None, counter_clockwise = None):
         self.x = x
         self.y = y
         self.clockwise : Node = clockwise
@@ -32,7 +32,7 @@ class Node:
 
 
 def calculate_slope(c: Node,d: Node):
-    return (d.y - c.y)/(d.x - c.x)
+    return (c.y - d.y)/(c.x - d.x)
 
 # def calculate_highest_slope(a: Node, b: Node):
 #     a_mod = a
@@ -55,8 +55,8 @@ def calculate_lower(a: Node, b: Node):
     b_changed = True
 
     while  a_changed == True or b_changed == True:
-        a_mod = a
-        a_mod2 = a
+        a_mod = Node(a.x,a.y,a.clockwise,a.counter_clockwise)
+        a_mod2 = Node(a.x,a.y,a.clockwise,a.counter_clockwise)
         
         while a_changed:
             a_changed = False
@@ -71,8 +71,8 @@ def calculate_lower(a: Node, b: Node):
                 b = a_mod2.get_clockwise()
                 a_changed = True
 
-        b_mod = b
-        b_mod2 = b
+        b_mod = Node(b.x,b.y,b.clockwise,b.counter_clockwise)
+        b_mod2 = Node(b.x,b.y,b.clockwise,b.counter_clockwise)
 
         while b_changed:
             b_changed = False
@@ -96,9 +96,9 @@ def calculate_upper(a: Node, b: Node):
     b_changed = True
 
     while  a_changed == True or b_changed == True:
-        
-        a_mod = a
-        a_mod2 = a
+
+        a_mod = Node(a.x, a.y, a.clockwise, a.counter_clockwise)
+        a_mod2 = Node(a.x, a.y, a.clockwise, a.counter_clockwise)
 
         while a_changed:
             a_changed = False
@@ -113,8 +113,8 @@ def calculate_upper(a: Node, b: Node):
                 b = a_mod2.get_counter_clockwise()
                 a_changed = True
 
-        b_mod = b
-        b_mod2 = b
+        b_mod = Node(b.x, b.y, b.clockwise, b.counter_clockwise)
+        b_mod2 = Node(b.x, b.y, b.clockwise, b.counter_clockwise)
 
         while b_changed:
             b_changed = False
@@ -157,12 +157,25 @@ def calculate_leftmost(node_list: list[Node]):
 def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right):
     merged_list = []
 
-    merged_list[0] = corrected_top_left
-    merged_list[1] = corrected_top_right
+    for i in left_hull:
+        if i.x == corrected_top_left.x and i.y == corrected_top_left.y:
+            for j in right_hull:
+                if j.x == corrected_top_right.x and j.y == corrected_top_right.y:
+                    i.set_clockwise(j)
+                    j.set_counter_clockwise(i)
+                    merged_list.append(i)
+                    merged_list.append(j)
+        if i.x == corrected_bot_left.x and i.y == corrected_bot_left.y:
+            for j in right_hull:
+                if j.x == corrected_bot_right.x and j.y == corrected_bot_right.y:
+                    i.set_counter_clockwise(j)
+                    j.set_clockwise(i)
+
 
     next_one = merged_list[1]
     while next_one != merged_list[0]:
-        merged_list.append(next_one)
+        if next_one != merged_list[1]:
+            merged_list.append(next_one)
         next_one = next_one.get_clockwise()
 
     return merged_list
@@ -199,9 +212,10 @@ def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]
         new_node.set_clockwise(new_node)
         new_node.set_counter_clockwise(new_node)
         linked_list.append(new_node)
+
     linked_list = hull_algorithm(linked_list)
 
     for node in linked_list:
-        result_list[node.getX(),node.getY()]
+        result_list.append((node.x, node.y))
 
     return result_list
