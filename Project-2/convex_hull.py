@@ -162,11 +162,10 @@ def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corr
     merged_list[0] = corrected_top_left
     merged_list[1] = corrected_top_right
 
-    
-    next_one = corrected_top_right
-    while next_one != corrected_top_left:
-        merged_list.append(next_one.get_clockwise)
-        next_one = next_one.get_clockwise
+    next_one = merged_list[1]
+    while next_one != merged_list[0]:
+        merged_list.append(next_one)
+        next_one = next_one.get_clockwise()
 
     return merged_list
 
