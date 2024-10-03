@@ -29,6 +29,8 @@ class Node:
         return self.counter_clockwise
 
 
+
+
 def calculate_slope(c: Node,d: Node):
     return (d.getY - c.getY)/(d.getX - c.getX)
 
@@ -154,14 +156,28 @@ def calculate_leftmost(node_list: list[Node]):
             continue
     return leftmost_node
 
+def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right):
+    merged_list = []
+
+    merged_list[0] = corrected_top_left
+    merged_list[1] = corrected_top_right
+
+    
+    next_one = corrected_top_right
+    while next_one != corrected_top_left:
+        merged_list.append(next_one.get_clockwise)
+        next_one = next_one.get_clockwise
+
+    return merged_list
+
 def hull_algorithm(node_list: list[Node]):
 # this part will handle the linked list and recurse
     n = len(node_list)
     if n == 1:
         return node_list
 
-    L = node_list[0:n/2]
-    R = node_list[n/2:]
+    L = node_list[0:n//2]
+    R = node_list[n//2:]
 
     left_hull = hull_algorithm(L)
     right_hull = hull_algorithm(R)
@@ -169,12 +185,10 @@ def hull_algorithm(node_list: list[Node]):
     leftmost_node = calculate_leftmost(right_hull)
     rightmost_node = calculate_rightmost(left_hull)
 
-    
-    corrected_top_hull = calculate_upper(leftmost_node,rightmost_node)
-    
-    corrected_bot_hull = calculate_lower(leftmost_node,rightmost_node)
+    corrected_top_left, corrected_top_right = calculate_upper(leftmost_node,rightmost_node)
+    corrected_bot_left, corrected_bot_right = calculate_lower(leftmost_node,rightmost_node)
 
-
+    node_list = merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right)
 
     return node_list
 
