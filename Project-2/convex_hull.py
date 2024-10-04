@@ -1,5 +1,7 @@
 # Uncomment this line to import some functions that can help
 # you debug your algorithm
+from matplotlib import pyplot as plt
+
 from plotting import draw_line, draw_hull, circle_point
 
 
@@ -29,6 +31,23 @@ class Node:
         return self.counter_clockwise
 
 
+def draw_hull(points: list[tuple[float, float]], **kwargs):
+    xx, yy = zip(*points)
+    xx = [*xx, points[0][0]]
+    yy = [*yy, points[0][1]]
+    plt.plot(xx, yy, **kwargs)
+
+def draw_line(p1: tuple[float, float], p2: tuple[float, float], **kwargs):
+    xx = [p1[0], p2[0]]
+    yy = [p1[1], p2[1]]
+    plt.plot(xx, yy, **kwargs)
+
+def plot_points(points: list[tuple[float, float]], **kwargs):
+    if 'c' not in kwargs:
+        kwargs['c'] = 'k'
+
+    xx, yy = zip(*points)
+    plt.scatter(xx, yy, **kwargs)
 
 
 def calculate_slope(c,d):
@@ -211,11 +230,12 @@ def hull_algorithm(node_list):
 
     return new_node_list
 
+
 def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     """Return the subset of provided points that define the convex hull"""
     linked_list = []
     result_list = []
-
+    plot_points(points)
     # for element in sorted(points):
     #     new_node = Node(element[0], element[1])
     #     new_node.set_clockwise(new_node)
@@ -227,4 +247,8 @@ def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]
     for node in linked_list:
         result_list.append((node.x, node.y))
 
+
+
+    draw_hull(result_list)
+    plt.show()
     return result_list
