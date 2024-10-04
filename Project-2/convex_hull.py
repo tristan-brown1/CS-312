@@ -31,7 +31,7 @@ class Node:
 
 
 
-def calculate_slope(c: Node,d: Node):
+def calculate_slope(c,d):
     return (c.y - d.y)/(c.x - d.x)
 
 # def calculate_highest_slope(a: Node, b: Node):
@@ -48,9 +48,10 @@ def calculate_slope(c: Node,d: Node):
 
 #     return a 
 
-def calculate_lower(a: Node, b: Node):
+def calculate_lower(h: Node, k: Node):
 # this part will handle the lower bound calculations
-    
+    a = h
+    b = k
     a_changed = True
     b_changed = True
 
@@ -89,9 +90,10 @@ def calculate_lower(a: Node, b: Node):
 
     return a,b
 
-def calculate_upper(a: Node, b: Node):
+def calculate_upper(f: Node, g: Node):
 # this part will handle the lower bound calculations
-    
+    a = f
+    b = g
     a_changed = True
     b_changed = True
 
@@ -195,8 +197,10 @@ def hull_algorithm(node_list: list[Node]):
     leftmost_node = calculate_leftmost(right_hull)
     rightmost_node = calculate_rightmost(left_hull)
 
+    temp_leftmost  = Node(leftmost_node.x,leftmost_node.y,leftmost_node.clockwise,leftmost_node.counter_clockwise)
+    temp_rightmost  = Node(rightmost_node.x,rightmost_node.y,rightmost_node.clockwise,rightmost_node.counter_clockwise)
     corrected_top_right, corrected_top_left = calculate_upper(leftmost_node,rightmost_node)
-    corrected_bot_right, corrected_bot_left = calculate_lower(leftmost_node,rightmost_node)
+    corrected_bot_right, corrected_bot_left = calculate_lower(temp_leftmost,temp_rightmost)
 
     node_list = merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right)
 
