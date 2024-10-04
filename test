@@ -1,0 +1,14 @@
+temp_left = b
+temp_right = a
+
+    change_count = 1
+    while change_count != 0:
+        change_count = 0
+        while calculate_slope(temp_left, temp_right) > calculate_slope(temp_left.counter_clockwise, temp_right):
+            temp_left = temp_left.counter_clockwise
+            change_count += 1
+        while calculate_slope(temp_left, temp_right) < calculate_slope(temp_left, temp_right.clockwise):
+            temp_right = temp_right.clockwise
+            change_count += 1
+
+    return temp_right, temp_left
