@@ -173,7 +173,6 @@ def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corr
                     i.set_counter_clockwise(j)
                     j.set_clockwise(i)
 
-
     next_one = merged_list[1]
     while next_one != merged_list[0]:
         if next_one != merged_list[1]:
@@ -182,11 +181,16 @@ def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corr
 
     return merged_list
 
-def hull_algorithm(node_list: list[Node]):
+def hull_algorithm(node_list):
 # this part will handle the linked list and recurse
     n = len(node_list)
+    new_list = []
     if n == 1:
-        return node_list
+        new_node = Node(node_list[0][0], node_list[0][1])
+        new_node.set_clockwise(new_node)
+        new_node.set_counter_clockwise(new_node)
+        new_list.append(new_node)
+        return new_list
 
     L = node_list[:n//2]
     R = node_list[n//2:]
@@ -203,22 +207,22 @@ def hull_algorithm(node_list: list[Node]):
     corrected_top_right, corrected_top_left = calculate_upper(leftmost_node,rightmost_node)
     corrected_bot_right, corrected_bot_left = calculate_lower(temp_leftmost,temp_rightmost)
 
-    node_list = merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right)
+    new_node_list = merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right)
 
-    return node_list
+    return new_node_list
 
 def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     """Return the subset of provided points that define the convex hull"""
     linked_list = []
     result_list = []
 
-    for element in sorted(points):
-        new_node = Node(element[0], element[1])
-        new_node.set_clockwise(new_node)
-        new_node.set_counter_clockwise(new_node)
-        linked_list.append(new_node)
+    # for element in sorted(points):
+    #     new_node = Node(element[0], element[1])
+    #     new_node.set_clockwise(new_node)
+    #     new_node.set_counter_clockwise(new_node)
+    #     linked_list.append(new_node)
 
-    linked_list = hull_algorithm(linked_list)
+    linked_list = hull_algorithm(sorted(points))
 
     for node in linked_list:
         result_list.append((node.x, node.y))
