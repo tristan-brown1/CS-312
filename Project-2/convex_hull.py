@@ -164,7 +164,7 @@ def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]
     for node in linked_list:
         result_list.append((node.x, node.y))
 
-    draw_hull(result_list)
-    plt.show()
+    # draw_hull(result_list)
+    # plt.show()
 
     return result_list
