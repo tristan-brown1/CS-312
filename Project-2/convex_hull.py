@@ -25,26 +25,9 @@ class Node:
         return self.counter_clockwise
 
 
-def draw_hull(points: list[tuple[float, float]], **kwargs):
-    xx, yy = zip(*points)
-    xx = [*xx, points[0][0]]
-    yy = [*yy, points[0][1]]
-    plt.plot(xx, yy, **kwargs)
-
-def draw_line(p1: tuple[float, float], p2: tuple[float, float], **kwargs):
-    xx = [p1[0], p2[0]]
-    yy = [p1[1], p2[1]]
-    plt.plot(xx, yy, **kwargs)
-
-def plot_points(points: list[tuple[float, float]], **kwargs):
-    if 'c' not in kwargs:
-        kwargs['c'] = 'k'
-
-    xx, yy = zip(*points)
-    plt.scatter(xx, yy, **kwargs)
-
 def calculate_slope(c,d):
     return (c.y - d.y)/(c.x - d.x)
+
 
 def calculate_lower(a: Node, b: Node):
     either_changed = True
@@ -61,6 +44,7 @@ def calculate_lower(a: Node, b: Node):
 
     return a, b
 
+
 def calculate_upper(a: Node, b: Node):
     either_changed = True
     while either_changed:
@@ -75,6 +59,7 @@ def calculate_upper(a: Node, b: Node):
             either_changed = True
 
     return a,b
+
 
 def calculate_rightmost(node_list: list[Node]):
     rightmost_node = None
@@ -98,6 +83,7 @@ def calculate_leftmost(node_list: list[Node]):
         else:
             continue
     return leftmost_node
+
 
 def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corrected_bot_left,corrected_bot_right):
     merged_list = []
@@ -124,8 +110,8 @@ def merge_hulls(left_hull,right_hull,corrected_top_left,corrected_top_right,corr
 
     return merged_list
 
+
 def hull_algorithm(node_list):
-# this part will handle the linked list and recurse
     n = len(node_list)
     new_list = []
     if n == 1:
@@ -154,17 +140,14 @@ def hull_algorithm(node_list):
 
     return new_node_list
 
+
 def compute_hull(points: list[tuple[float, float]]) -> list[tuple[float, float]]:
     """Return the subset of provided points that define the convex hull"""
     result_list = []
-    plot_points(points)
 
     linked_list = hull_algorithm(sorted(points))
 
     for node in linked_list:
         result_list.append((node.x, node.y))
-
-    # draw_hull(result_list)
-    # plt.show()
 
     return result_list
