@@ -1,5 +1,7 @@
+from numpy.f2py.auxfuncs import throw_error
 
-class Array_priority_queue:
+
+class ArrayPriorityQueue:
 
     def __init__(self, nodes):
         self.prio_queue = dict()
@@ -20,13 +22,41 @@ class Array_priority_queue:
 
 
 
-def dijkstra(graph,source) -> tuple[list[int], list[int]]:
+class HeapPriorityQueue:
+
+    def __init__(self, nodes):
+        self.prio_heap = dict()
+        for node in nodes:
+            self.prio_heap[node] = None
+
+    def percolate_up(self, index):
+        pass
+
+    def percolate_down(self, index):
+        pass
+
+    def get_length(self):
+        return len(self.prio_heap)
+
+    def delete_min(self):
+        pass
+
+    def decrease_key(self, item, priority):
+        pass
+
+
+def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
     dist = dict()
     prev = dict()
     for u in graph:
         dist[u] = None
         prev[u] = None
-    H = Array_priority_queue(graph)
+    if pq_type == "array":
+        H = ArrayPriorityQueue(graph)
+    elif pq_type == "heap":
+        H = HeapPriorityQueue(graph)
+    else:
+        throw_error("implementation is not supported")
     dist[source] = 0
     H.decrease_key(source,0)
     while H.get_length() != 0:
@@ -60,6 +90,17 @@ def find_shortest_path_with_heap(
         - the list of nodes (including `source` and `target`)
         - the cost of the path
     """
+    dist, prev = dijkstra(graph, source, "heap")
+
+    cost = dist[target]
+    path = []
+    step = target
+    while step is not None:
+        path.append(step)
+        step = prev[step]
+
+    return path[::-1], cost
+
 
 
 def find_shortest_path_with_array(
@@ -77,7 +118,7 @@ def find_shortest_path_with_array(
         - the cost of the path
     """
 
-    dist, prev = dijkstra(graph, source)
+    dist, prev = dijkstra(graph, source, "array")
     
     cost = dist[target]
     path = []
