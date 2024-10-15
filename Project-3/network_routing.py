@@ -1,18 +1,21 @@
 
 class Array_priority_queue:
 
-    def _init_(self, nodes):
+    def __init__(self, nodes):
         self.prio_queue = dict()
         for node in nodes:
-            self.prio_queue[node[0]] = None
+            self.prio_queue[node] = None
 
     def delete_min(self):
-        candidate = min(self.prio_queue, key = self.prio_queue.get)
+        candidate = min(self.prio_queue, key = lambda k: self.prio_queue[k] if self.prio_queue[k] is not None else float('inf'))
         del self.prio_queue[candidate]
         return candidate
 
     def decrease_key(self,node, v):
         self.prio_queue[node] = v
+
+    def get_length(self):
+        return len(self.prio_queue)
 
 
 
@@ -21,16 +24,18 @@ def dijkstra(graph,source) -> tuple[list[int], list[int]]:
     dist = dict()
     prev = dict()
     for u in graph:
-        dist[u[0]] = None
-        prev[u[0]] = None
+        dist[u] = None
+        prev[u] = None
     H = Array_priority_queue(graph)
     dist[source] = 0
     H.decrease_key(source,0)
-    while len(H) != 0:
+    while H.get_length() != 0:
         u = H.delete_min()
-        for connected_node,connection_distance in graph[u]:
-            if dist[connected_node] == None:
-                dist[connected_node] = connection_distance
+        for connected_node in graph[u]:
+            connection_distance = graph[u][connected_node]
+            if dist[connected_node] is None:
+                dist[connected_node] = dist[u] + connection_distance
+                prev[connected_node] = u
                 H.decrease_key(connected_node,connection_distance)
             elif dist[connected_node] > dist[u] + connection_distance:
                 dist[connected_node] = dist[u] + connection_distance
@@ -77,7 +82,7 @@ def find_shortest_path_with_array(
     cost = dist[target]
     path = []
     step = target
-    while step != None:
+    while step is not None:
         path.append(step)
         step = prev[step]
 
