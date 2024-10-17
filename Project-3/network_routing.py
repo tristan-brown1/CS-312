@@ -24,10 +24,22 @@ class ArrayPriorityQueue:
 
 class HeapPriorityQueue:
 
-    def __init__(self, nodes):
-        self.prio_heap = dict()
+    def __init__(self, nodes, source):
+        self.heap_list = []
+        self.index_dict = dict()
+
+        self.heap_list.append(0,source)
+        self.index_dict[0] = source
+
         for node in nodes:
-            self.prio_heap[node] = None
+            i = 1
+            if node == source:
+                pass
+            else:
+                self.heap_list.append(None,node)
+                self.index_dict[node] = i
+                i += 1
+
 
     def percolate_up(self, index):
         pass
@@ -35,11 +47,26 @@ class HeapPriorityQueue:
     def percolate_down(self, index):
         pass
 
+    def swap(self,i,j):
+        self.heap_list[i], self.heap_list[j] = self.heap_list[j], self.heap_list[i]
+        self.index_dict[self.heap_list[i][1]] = self.heap_list[j][0]   
+        self.index_dict[self.heap_list[j][1]] = self.heap_list[j][0]
+
     def get_length(self):
-        return len(self.prio_heap)
+        return len(self.heap_list)
 
     def delete_min(self):
-        pass
+        min = self.heap_list[0]
+        del self.index_dict[min[1]]
+        self.heap_list[0] = self.heap_list[-1]
+        self.heap_list.pop
+
+        if self.heap_listp[1] < self.heap_list[2]:
+            self.swap(0,1)
+        else:
+            self.swap(0,2)
+        settled = False
+
 
     def decrease_key(self, item, priority):
         pass
@@ -54,7 +81,7 @@ def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
     if pq_type == "array":
         H = ArrayPriorityQueue(graph)
     elif pq_type == "heap":
-        H = HeapPriorityQueue(graph)
+        H = HeapPriorityQueue(graph,source)
     else:
         throw_error("implementation is not supported")
     dist[source] = 0
