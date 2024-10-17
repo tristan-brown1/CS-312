@@ -27,24 +27,28 @@ class HeapPriorityQueue:
     def __init__(self, nodes, source):
         self.heap_list = []
         self.index_dict = dict()
+        self.history = set()
 
-        self.heap_list.append(0,source)
-        self.index_dict[0] = source
+        # self.heap_list.append(0,source)
+        # self.index_dict[0] = source
 
-        for node in nodes:
-            i = 1
-            if node == source:
-                pass
-            else:
-                self.heap_list.append(None,node)
-                self.index_dict[node] = i
-                i += 1
+        # for node in nodes:
+        #     i = 1
+        #     if node == source:
+        #         pass
+        #     else:
+        #         self.heap_list.append(None,node)
+        #         self.index_dict[node] = i
+        #         i += 1
 
+    # def insert(self, node):
+    #     self.heap_list.append(None,node)
+    #     self.index_dict[node] = i
 
-    def percolate_up(self, index):
+    def swap_up(self, index):
         pass
 
-    def percolate_down(self, index):
+    def swap_down(self, index):
         pass
 
     def swap(self,i,j):
@@ -61,15 +65,28 @@ class HeapPriorityQueue:
         self.heap_list[0] = self.heap_list[-1]
         self.heap_list.pop
 
-        if self.heap_listp[1] < self.heap_list[2]:
-            self.swap(0,1)
-        else:
-            self.swap(0,2)
         settled = False
+        while settled != True:
+            settled = True
+            if self.heap_listp[1] < self.heap_list[2]:
+                if self.heap_list[0] < self.heap_list[1]:
+                    self.swap(0,1)
+                    settled = False
+            else:
+                if self.heap_list[0] < self.heap_list[2]:
+                    self.swap(0,2)
+                    settled = False
+                
 
 
-    def decrease_key(self, item, priority):
-        pass
+        # settled = False
+        # while settled != True:
+        #     pass
+
+
+    def decrease_key(self, node, distance):
+        self.heap_list.append(distance,node)
+        self.index_dict[len(self.heap_list) - 1] = node
 
 
 def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
