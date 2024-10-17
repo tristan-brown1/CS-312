@@ -27,7 +27,7 @@ class HeapPriorityQueue:
     def __init__(self, nodes, source):
         self.heap_list = []
         self.index_dict = dict()
-        self.history = set()
+        #self.history = set()
 
         # self.heap_list.append(0,source)
         # self.index_dict[0] = source
@@ -59,28 +59,37 @@ class HeapPriorityQueue:
     def get_length(self):
         return len(self.heap_list)
 
+    def settle(self):
+        pass
+
     def delete_min(self):
+        ##removing the smallest node in the list
+        #this would require a check to make sure that things have settled
+
         min = self.heap_list[0]
         del self.index_dict[min[1]]
         self.heap_list[0] = self.heap_list[-1]
         self.heap_list.pop
+        self.settle()
 
 
-
-        settled = False
-        while settled != True:
-            settled = True
-            if self.heap_list[1] < self.heap_list[2]:
-                if self.heap_list[0] < self.heap_list[1]:
-                    self.swap(0,1)
-                    settled = False
-            else:
-                if self.heap_list[0] < self.heap_list[2]:
-                    self.swap(0,2)
-                    settled = False
+        # settled = False
+        # while settled != True:
+        #     settled = True
+        #     if self.heap_list[1] < self.heap_list[2]:
+        #         if self.heap_list[0] < self.heap_list[1]:
+        #             self.swap(0,1)
+        #             settled = False
+        #     else:
+        #         if self.heap_list[0] < self.heap_list[2]:
+        #             self.swap(0,2)
+        #             settled = False
 
 
     def decrease_key(self, node, distance):
+        ##updating the node and its distance 
+        #this would require a check to make sure things have settled 
+
         self.heap_list.append(distance,node)
         self.index_dict[len(self.heap_list) - 1] = node
 
