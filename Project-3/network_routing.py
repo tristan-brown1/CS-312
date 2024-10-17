@@ -65,10 +65,12 @@ class HeapPriorityQueue:
         self.heap_list[0] = self.heap_list[-1]
         self.heap_list.pop
 
+
+
         settled = False
         while settled != True:
             settled = True
-            if self.heap_listp[1] < self.heap_list[2]:
+            if self.heap_list[1] < self.heap_list[2]:
                 if self.heap_list[0] < self.heap_list[1]:
                     self.swap(0,1)
                     settled = False
@@ -76,17 +78,14 @@ class HeapPriorityQueue:
                 if self.heap_list[0] < self.heap_list[2]:
                     self.swap(0,2)
                     settled = False
-                
-
-
-        # settled = False
-        # while settled != True:
-        #     pass
 
 
     def decrease_key(self, node, distance):
         self.heap_list.append(distance,node)
         self.index_dict[len(self.heap_list) - 1] = node
+
+
+
 
 
 def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
@@ -98,7 +97,7 @@ def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
     if pq_type == "array":
         H = ArrayPriorityQueue(graph)
     elif pq_type == "heap":
-        H = HeapPriorityQueue(graph,source)
+        H = HeapPriorityQueue(graph)
     else:
         throw_error("implementation is not supported")
     dist[source] = 0
