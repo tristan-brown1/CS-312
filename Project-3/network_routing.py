@@ -25,9 +25,10 @@ class ArrayPriorityQueue:
 class HeapPriorityQueue:
 
     def __init__(self, nodes, source):
-        self.heap_list = []
+        # self.heap_list: [tuple[float,int]] = []
+        self.heap_list = [tuple[float,int]]
         self.index_dict = dict()
-        #self.history = set()
+        self.history = set()
 
         # self.heap_list.append(0,source)
         # self.index_dict[0] = source
@@ -46,15 +47,21 @@ class HeapPriorityQueue:
     #     self.index_dict[node] = i
 
     def swap_up(self, index):
-        pass
+        parent_index = ((index+1)//2)-1
+        parent = self.heap_list[parent_index]
+        candidate = self.heap_list[index]
+
+        if parent[0] < candidate[0]:
+            self.swap(parent_index,index)
+            self.swap_up(parent_index)
 
     def swap_down(self, index):
         pass
 
     def swap(self,i,j):
         self.heap_list[i], self.heap_list[j] = self.heap_list[j], self.heap_list[i]
-        self.index_dict[self.heap_list[i][1]] = self.heap_list[j][0]   
-        self.index_dict[self.heap_list[j][1]] = self.heap_list[j][0]
+        self.index_dict[self.heap_list[i][1]] = i  
+        self.index_dict[self.heap_list[j][1]] = j
 
     def get_length(self):
         return len(self.heap_list)
@@ -90,11 +97,17 @@ class HeapPriorityQueue:
         ##updating the node and its distance 
         #this would require a check to make sure things have settled 
 
-        self.heap_list.append(distance,node)
-        self.index_dict[len(self.heap_list) - 1] = node
-
-
-
+        if node in self.heap_list:
+            current_index = self.index_dict[node]
+            if distance < self.heap_list[current_index][0]:
+                self.heap_list[current_index][0] = distance
+                self.swap_up(current_index)
+        elif node not in self.history:
+            self.heap_list.append(distance,node)
+            self.index_dict[len(self.heap_list) - 1] = node
+            self.swap_up(len(self.heap_list) - 1)
+        else:
+            return
 
 
 def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
