@@ -1,5 +1,5 @@
-from numpy.f2py.auxfuncs import throw_error
 
+from numpy.f2py.auxfuncs import throw_error
 
 class ArrayPriorityQueue:
 
@@ -13,11 +13,13 @@ class ArrayPriorityQueue:
         del self.prio_queue[candidate]
         return candidate
 
+    def get_length(self):
+        return len(self.prio_queue)
+
     def decrease_key(self,node, v):
         self.prio_queue[node] = v
 
-    def get_length(self):
-        return len(self.prio_queue)
+
 
 
 
@@ -26,28 +28,17 @@ class HeapPriorityQueue:
 
     def __init__(self, nodes):
         self.heap_list: [tuple[float,int]] = []
-        #self.heap_list = [tuple[float,int]]
         self.index_dict = dict()
         self.history = set()
 
-        # self.heap_list.append(0,source)
-        # self.index_dict[0] = source
-
-        # for node in nodes:
-        #     i = 1
-        #     if node == source:
-        #         pass
-        #     else:
-        #         self.heap_list.append(None,node)
-        #         self.index_dict[node] = i
-        #         i += 1
-
-    # def insert(self, node):
-    #     self.heap_list.append(None,node)
-    #     self.index_dict[node] = i
 
     def swap_up(self, index):
-        parent_index = ((index+1)//2)-1
+        parent_index = ((index + 1) //2)
+        if parent_index == 0:
+            return
+        else:
+            parent_index -= 1
+
         parent = self.heap_list[parent_index]
         candidate = self.heap_list[index]
 
@@ -56,10 +47,10 @@ class HeapPriorityQueue:
             self.swap_up(parent_index)
 
     def swap_down(self, index):
-
         candidate = self.heap_list[index]
-        child_A_index = (index + 1) *2 - 1
-        child_B_index = (index - 1) *2
+        child_A_index = (index + 1) * 2 - 1
+        child_B_index = (index + 1) * 2
+
         if child_A_index < len(self.heap_list):
             child_A = self.heap_list[child_A_index]
         else:
@@ -81,7 +72,7 @@ class HeapPriorityQueue:
                 if child_A[0] < child_B[0]:
                     self.swap(index, child_A_index)
                     self.swap_down(child_A_index)
-                if child_B[0] < child_A[0]:
+                else:
                     self.swap(index, child_B_index)
                     self.swap_down(child_B_index)
 
@@ -94,12 +85,8 @@ class HeapPriorityQueue:
     def get_length(self):
         return len(self.heap_list)
 
-    def settle(self):
-        pass
 
     def delete_min(self):
-        ##removing the smallest node in the list
-        #this would require a check to make sure that things have settled
 
         min_node = self.heap_list[0]
         del self.index_dict[min_node[1]]
@@ -119,8 +106,6 @@ class HeapPriorityQueue:
 
 
     def decrease_key(self, node, distance):
-        ##updating the node and its distance 
-        #this would require a check to make sure things have settled 
 
         if node in self.heap_list:
             current_index = self.index_dict[node]
@@ -131,8 +116,6 @@ class HeapPriorityQueue:
             self.heap_list.append([distance,node])
             self.index_dict[node] = len(self.heap_list) - 1
             self.swap_up(len(self.heap_list) - 1)
-        else:
-            return
 
 
 def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
@@ -149,6 +132,7 @@ def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
         throw_error("implementation is not supported")
     dist[source] = 0
     H.decrease_key(source,0)
+
     while H.get_length() != 0:
         u = H.delete_min()
         for connected_node in graph[u]:
@@ -156,11 +140,12 @@ def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
             if dist[connected_node] is None:
                 dist[connected_node] = dist[u] + connection_distance
                 prev[connected_node] = u
-                H.decrease_key(connected_node,connection_distance)
+                H.decrease_key(connected_node,dist[u] + connection_distance)
             elif dist[connected_node] > dist[u] + connection_distance:
                 dist[connected_node] = dist[u] + connection_distance
                 prev[connected_node] = u 
-                H.decrease_key(connected_node,connection_distance)
+                H.decrease_key(connected_node,dist[u] + connection_distance)
+
     return dist,prev
 
 
