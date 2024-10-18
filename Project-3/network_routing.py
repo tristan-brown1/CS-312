@@ -51,12 +51,40 @@ class HeapPriorityQueue:
         parent = self.heap_list[parent_index]
         candidate = self.heap_list[index]
 
-        if parent[0] < candidate[0]:
+        if parent[0] > candidate[0]:
             self.swap(parent_index,index)
             self.swap_up(parent_index)
 
     def swap_down(self, index):
-        pass
+
+        candidate = self.heap_list[index]
+        child_A_index = (index + 1) *2 - 1
+        child_B_index = (index - 1) *2
+        if child_A_index < len(self.heap_list):
+            child_A = self.heap_list[child_A_index]
+        else:
+            child_A = None
+
+        if child_B_index < len(self.heap_list):
+            child_B = self.heap_list[child_B_index]
+        else:
+            child_B = None
+
+        if child_A is None:
+            return
+        elif child_B is None:
+            if child_A[0] < candidate[0]:
+                self.swap(index, child_A_index)
+                self.swap_down(child_A_index)
+        else:
+            if child_A[0] < candidate[0] or child_B[0] < candidate[0]:
+                if child_A[0] < child_B[0]:
+                    self.swap(index, child_A_index)
+                    self.swap_down(child_A_index)
+                if child_B[0] < child_A[0]:
+                    self.swap(index, child_B_index)
+                    self.swap_down(child_B_index)
+
 
     def swap(self,i,j):
         self.heap_list[i], self.heap_list[j] = self.heap_list[j], self.heap_list[i]
@@ -73,24 +101,21 @@ class HeapPriorityQueue:
         ##removing the smallest node in the list
         #this would require a check to make sure that things have settled
 
-        min = self.heap_list[0]
-        del self.index_dict[min[1]]
+        min_node = self.heap_list[0]
+        del self.index_dict[min_node[1]]
         self.heap_list[0] = self.heap_list[-1]
-        self.heap_list.pop
-        self.settle()
+        self.heap_list.pop()
+        self.history.add(min_node[1])
 
+        if len(self.heap_list) > 1:
+            self.index_dict[self.heap_list[0][1]] = 0
+            self.swap_down(0)
 
-        # settled = False
-        # while settled != True:
-        #     settled = True
-        #     if self.heap_list[1] < self.heap_list[2]:
-        #         if self.heap_list[0] < self.heap_list[1]:
-        #             self.swap(0,1)
-        #             settled = False
-        #     else:
-        #         if self.heap_list[0] < self.heap_list[2]:
-        #             self.swap(0,2)
-        #             settled = False
+        elif len(self.heap_list) > 0:
+            last_value = self.heap_list[0][1]
+            self.index_dict[last_value] = 0
+
+        return min_node[1]
 
 
     def decrease_key(self, node, distance):
@@ -104,7 +129,7 @@ class HeapPriorityQueue:
                 self.swap_up(current_index)
         elif node not in self.history:
             self.heap_list.append([distance,node])
-            self.index_dict[len(self.heap_list) - 1] = node
+            self.index_dict[node] = len(self.heap_list) - 1
             self.swap_up(len(self.heap_list) - 1)
         else:
             return
