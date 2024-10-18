@@ -24,9 +24,9 @@ class ArrayPriorityQueue:
 
 class HeapPriorityQueue:
 
-    def __init__(self, nodes, source):
-        # self.heap_list: [tuple[float,int]] = []
-        self.heap_list = [tuple[float,int]]
+    def __init__(self, nodes):
+        self.heap_list: [tuple[float,int]] = []
+        #self.heap_list = [tuple[float,int]]
         self.index_dict = dict()
         self.history = set()
 
@@ -103,7 +103,7 @@ class HeapPriorityQueue:
                 self.heap_list[current_index][0] = distance
                 self.swap_up(current_index)
         elif node not in self.history:
-            self.heap_list.append(distance,node)
+            self.heap_list.append([distance,node])
             self.index_dict[len(self.heap_list) - 1] = node
             self.swap_up(len(self.heap_list) - 1)
         else:
