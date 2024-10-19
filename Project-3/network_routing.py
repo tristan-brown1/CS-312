@@ -16,12 +16,8 @@ class ArrayPriorityQueue:
     def get_length(self):
         return len(self.prio_queue)
 
-    def decrease_key(self,node, v):
-        self.prio_queue[node] = v
-
-
-
-
+    def decrease_key(self,node, distance):
+        self.prio_queue[node] = distance
 
 
 class HeapPriorityQueue:
@@ -30,7 +26,6 @@ class HeapPriorityQueue:
         self.heap_list: [tuple[float,int]] = []
         self.index_dict = dict()
         self.history = set()
-
 
     def swap_up(self, index):
         parent_index = ((index + 1) //2)
@@ -76,7 +71,6 @@ class HeapPriorityQueue:
                     self.swap(index, child_B_index)
                     self.swap_down(child_B_index)
 
-
     def swap(self,i,j):
         self.heap_list[i], self.heap_list[j] = self.heap_list[j], self.heap_list[i]
         self.index_dict[self.heap_list[i][1]] = i  
@@ -84,7 +78,6 @@ class HeapPriorityQueue:
 
     def get_length(self):
         return len(self.heap_list)
-
 
     def delete_min(self):
 
@@ -103,7 +96,6 @@ class HeapPriorityQueue:
             self.index_dict[last_value] = 0
 
         return min_node[1]
-
 
     def decrease_key(self, node, distance):
 
@@ -137,19 +129,17 @@ def dijkstra(graph, source, pq_type) -> tuple[list[int], list[int]]:
         u = H.delete_min()
         for connected_node in graph[u]:
             connection_distance = graph[u][connected_node]
-            if dist[connected_node] is None:
-                dist[connected_node] = dist[u] + connection_distance
-                prev[connected_node] = u
-                H.decrease_key(connected_node,dist[u] + connection_distance)
-            elif dist[connected_node] > dist[u] + connection_distance:
-                dist[connected_node] = dist[u] + connection_distance
-                prev[connected_node] = u 
-                H.decrease_key(connected_node,dist[u] + connection_distance)
+            if dist[u] is not None:
+                if dist[connected_node] is None:
+                    dist[connected_node] = dist[u] + connection_distance
+                    prev[connected_node] = u
+                    H.decrease_key(connected_node,dist[u] + connection_distance)
+                elif dist[connected_node] > dist[u] + connection_distance:
+                    dist[connected_node] = dist[u] + connection_distance
+                    prev[connected_node] = u
+                    H.decrease_key(connected_node,dist[u] + connection_distance)
 
     return dist,prev
-
-
-
 
 
 def find_shortest_path_with_heap(
@@ -157,14 +147,7 @@ def find_shortest_path_with_heap(
         source: int,
         target: int
 ) -> tuple[list[int], float]:
-    """
-    Find the shortest (least-cost) path from `source` to `target` in `graph`
-    using the heap-based algorithm.
 
-    Return:
-        - the list of nodes (including `source` and `target`)
-        - the cost of the path
-    """
     dist, prev = dijkstra(graph, source, "heap")
 
     cost = dist[target]
@@ -177,21 +160,11 @@ def find_shortest_path_with_heap(
     return path[::-1], cost
 
 
-
 def find_shortest_path_with_array(
         graph: dict[int, dict[int, float]],
         source: int,
         target: int
 ) -> tuple[list[int], float]:
-
-    """
-    Find the shortest (least-cost) path from `source` to `target` in `graph`
-    using the array-based (linear lookup) algorithm.
-
-    Return:
-        - the list of nodes (including `source` and `target`)
-        - the cost of the path
-    """
 
     dist, prev = dijkstra(graph, source, "array")
     
