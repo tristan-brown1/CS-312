@@ -119,5 +119,10 @@ if __name__ == '__main__':
     main(args.seed, args.n, args.density, args.noise, args.source, args.target)
 
     # You can use a loop like the following to generate data for your tables:
-    for n in [1000, 5000, 10000, 50000, 100000]:
-        main(312, n, 1, 0.02, 2, 9)
+    # for n in [1000,2000,3000,4000,5000,6000]:
+    #     main(312, n, 1, 0.02, 2, 9)
+    # main(312, 1000, 0.01, 0.02, 2, 9)
+    # main(312, 5000, 0.002, 0.02, 2, 9)
+    # main(312, 10000, 0.001, 0.02, 2, 9)
+    # main(312, 50000, 0.0002, 0.02, 2, 9)
+    main(312, 100000, 0.0001, 0.02, 2, 9)
