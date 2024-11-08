@@ -1,3 +1,5 @@
+import numpy as np
+
 def align(
         seq1: str,
         seq2: str,
@@ -20,4 +22,27 @@ def align(
         :param gap: the character to use to represent gaps in the alignment strings
         :return: alignment cost, alignment 1, alignment 2
     """
+    # banded_alignment, alignment_cost = banded_algorithm("dog", "cat")
+    unrestricted_alignment, alignment_cost = unrestricted_algorithm("dog", "cat")
+    aligned_a, aligned_b = perform_alignment(unrestricted_alignment,"dog","cat")
+    return alignment_cost, aligned_a, aligned_b
+
+def banded_algorithm(str_a,str_b):
+    pass
+
+def unrestricted_algorithm(str_a,str_b):
+
+    #create/initialize matrix used to calculate
+    matrix = [[row if column == 0 else column for column in range(len(str_a))] for row in range(len(str_b))]
+
+    #fill in the matrix one block at a time
+
+
+
+    return unrestricted_alignment, alignment_cost
+
+def perform_alignment(alignment_path, str_a, str_b):
+
+
+    return aligned_a, aligned_b
 
