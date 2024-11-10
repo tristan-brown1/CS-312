@@ -23,9 +23,11 @@ def align(
         :return: alignment cost, alignment 1, alignment 2
     """
     # banded_alignment, alignment_cost = banded_algorithm("dog", "cat")
-    unrestricted_alignment, alignment_cost = unrestricted_algorithm("dog", "cat")
-    aligned_a, aligned_b = perform_alignment(unrestricted_alignment,"dog","cat")
-    return alignment_cost, aligned_a, aligned_b
+    # unrestricted_alignment, alignment_cost = unrestricted_algorithm("dog", "cat")
+    # aligned_a, aligned_b = perform_alignment(unrestricted_alignment,"dog","cat")
+    # return alignment_cost, aligned_a, aligned_b
+    alignment_cost = unrestricted_algorithm("dog", "cat")
+    return alignment_cost, "cat","dog"
 
 def banded_algorithm(str_a,str_b):
     pass
@@ -33,13 +35,23 @@ def banded_algorithm(str_a,str_b):
 def unrestricted_algorithm(str_a,str_b):
 
     #create/initialize matrix used to calculate
-    matrix = [[row if column == 0 else column for column in range(len(str_a))] for row in range(len(str_b))]
+    matrix = [[row if column == 0 else column for column in range(len(str_a) + 1)] for row in range(len(str_b))]
 
     #fill in the matrix one block at a time
+    for i in range(1, len(str_a) - 1):
+        for j in range(1, len(str_b) - 1):
+            if str_a[i - 1] == str_b[j-1]:
+                # match!
+                matrix[i][j] = matrix[i - 1][j - 1]
+            else:
+                matrix[i][j] = min(matrix[i - 1][j] + 1,
+                                   matrix[i][j - 1] + 1,
+                                   matrix[i - 1][j - 1] + 1)
+    alignment_cost = matrix[-1][-1]
 
 
-
-    return unrestricted_alignment, alignment_cost
+    # return unrestricted_alignment, alignment_cost
+    return alignment_cost
 
 def perform_alignment(alignment_path, str_a, str_b):
 
