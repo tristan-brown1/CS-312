@@ -24,84 +24,89 @@ def align(
         :param gap: the character to use to represent gaps in the alignment strings
         :return: alignment cost, alignment 1, alignment 2
     """
-    # banded_alignment, alignment_cost = banded_algorithm("dog", "cat")
-    unrestricted_alignment, alignment_cost = unrestricted_algorithm(seq1, seq2)
-    aligned_a, aligned_b, new_alignment_cost = perform_alignment(unrestricted_alignment,seq1,seq2)
+    completed_matrix, alignment_cost = unrestricted_algorithm(seq1, seq2,banded_width,match_award,indel_penalty,sub_penalty)
+    aligned_a, aligned_b = perform_alignment(completed_matrix, seq1, seq2, match_award, indel_penalty, sub_penalty, gap)
     return alignment_cost, aligned_a, aligned_b
-    # return alignment_cost, seq1, seq2
-    # alignment_cost = unrestricted_algorithm("dog", "cat")
-    # return alignment_cost, "cat","dog"
 
-def banded_algorithm(str_a,str_b):
-    pass
+def unrestricted_algorithm(str_a,str_b,banded_width,match_award,indel_penalty,sub_penalty):
 
-def unrestricted_algorithm(str_a,str_b):
-    #create/initialize matrix used to calculate
-    matrix = [[row if column == 0 else column for column in range(len(str_b) + 1)] for row in range(len(str_a) + 1)]
-    # matrix = [[0] * (len(str_b) + 1) for _ in range(len(str_a) + 1)]
-    #fill in the matrix one block at a time
-    for i in range(1, len(str_a) + 1):
-        for j in range(1, len(str_b) + 1):
-            if str_a[i - 1] == str_b[j - 1]:                    # match!
-                matrix[i][j] = matrix[i - 1][j - 1]
+    a_length = len(str_a)
+    b_length = len(str_b)
+
+    #setup matrix dimensions and initialize with starting row and column
+    matrix = [[float('inf')] * (b_length + 1) for _ in range(a_length + 1)]
+    for i in range(0, a_length + 1):
+        matrix[i][0] = i * 5
+    for j in range(0, b_length + 1):
+        matrix[0][j] = j * 5
+
+    #main filling of the matrix
+    for i in range(1, a_length + 1):
+        #check to apply requested banded_width
+        if banded_width == -1:
+            j_min = 1
+            j_max = b_length
+        else:
+            j_min = max(1, i - banded_width)
+            j_max = min(b_length, i + banded_width)
+
+        for j in range(j_min, j_max + 1):
+            if str_a[i - 1] == str_b[j - 1]:
+                matrix[i][j] = matrix[i - 1][j - 1] + match_award
             else:
-            #     insert = matrix[i][j - 1]
-            #     delete = matrix[i - 1][j]
-            #     substitute = matrix[i - 1][j - 1]
-            #     min_value = min(insert, delete, substitute)
-            #     if min_value == insert:
-            #         matrix[i][j] = insert + 5
-            #     elif min_value == delete:
-            #         matrix[i][j] = delete + 5
-            #     elif min_value == substitute:
-            #         if str_a[i - 1] == str_b[j - 1]:
-            #             matrix[i][j] = substitute - 3
-            #         else:
-            #             matrix[i][j] = substitute + 1
+                insert = matrix[i][j - 1] + indel_penalty
+                delete = matrix[i - 1][j] + indel_penalty
+                substitute = matrix[i - 1][j - 1] + sub_penalty
 
-                matrix[i][j] = min(matrix[i - 1][j] + 1,        #delete
-                                   matrix[i][j - 1] + 1,        #insert
-                                   matrix[i - 1][j - 1] + 1)    #substitute
+                min_value = min(substitute,insert,delete)
 
+                if min_value == substitute:
+                    matrix[i][j] = substitute
+                elif min_value == insert:
+                    matrix[i][j] = insert
+                elif min_value == delete:
+                    matrix[i][j] = delete
+
+    #grab cost from the end of the matrix
     alignment_cost = matrix[-1][-1]
     return matrix, alignment_cost
-    # return alignment_cost
 
-def perform_alignment(alignment_path, str_a, str_b):
+
+
+def perform_alignment(completed_matrix, str_a, str_b, match_award, indel_penalty, sub_penalty, gap):
     aligned_a = []
     aligned_b = []
-    alignment_cost = 0
 
-    str_a_countdown = len(str_a)
-    str_b_countdown = len(str_b)
+    a_length = len(str_a)
+    b_length = len(str_b)
 
-    while str_a_countdown > 0 and str_b_countdown > 0:
-        if str_a_countdown > 0 and alignment_path[str_a_countdown][str_b_countdown] == alignment_path[str_a_countdown - 1][str_b_countdown] +1:
-            #delete
-            aligned_a.append(str_a[str_a_countdown - 1])
-            aligned_b.append("-")
-            str_a_countdown -= 1
-            alignment_cost += 5
+    while a_length > 0 or b_length > 0:
+        # check if match or substitution
+        if (str_a[a_length - 1] == str_b[b_length - 1] and completed_matrix[a_length][b_length] == completed_matrix[a_length - 1][b_length - 1] + match_award or
+                str_a[a_length - 1] != str_b[b_length - 1] and completed_matrix[a_length][b_length] == completed_matrix[a_length - 1][b_length - 1] + sub_penalty):
 
-        elif str_b_countdown > 0 and alignment_path[str_a_countdown][str_b_countdown] == alignment_path[str_a_countdown][str_b_countdown - 1] +1:
-            #insert
-            aligned_a.append("-")
-            aligned_b.append(str_a[str_b_countdown - 1])
-            str_b_countdown -= 1
-            alignment_cost += 5
-        else:
-            #sub/match
-            aligned_a.append(str_a[str_a_countdown-1])
-            aligned_b.append(str_b[str_b_countdown-1])
-            str_a_countdown -= 1
-            str_b_countdown -= 1
-            if str_a[str_a_countdown-1] == str_b[str_b_countdown-1]:
-                alignment_cost -= 3
-            else:
-                alignment_cost += 1
+            aligned_a.append(str_a[a_length - 1])
+            aligned_b.append(str_b[b_length - 1])
+            a_length -= 1
+            b_length -= 1
 
+        # check if insertion
+        elif completed_matrix[a_length][b_length] == completed_matrix[a_length][b_length - 1] + indel_penalty:
+
+            aligned_a.append(gap)
+            aligned_b.append(str_b[b_length - 1])
+            b_length -= 1
+
+        # check if deletion
+        elif completed_matrix[a_length][b_length] == completed_matrix[a_length - 1][b_length] + indel_penalty:
+
+            aligned_a.append(str_a[a_length - 1])
+            aligned_b.append(gap)
+            a_length -= 1
+
+    #create properly aligned strings from reverse lists
     aligned_a_str = "".join(aligned_a[::-1])
     aligned_b_str = "".join(aligned_b[::-1])
 
-    return aligned_a_str, aligned_b_str,alignment_cost
+    return aligned_a_str, aligned_b_str
 
