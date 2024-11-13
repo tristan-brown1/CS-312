@@ -21,6 +21,12 @@ def align(
 #         :param gap: the character to use to represent gaps in the alignment strings
 #         :return: alignment cost, alignment 1, alignment 2
 #     """
+    if banded_width != -1:
+        a_length = len(seq1)
+        b_length = len(seq2)
+        if a_length > b_length:
+            seq1, seq2 = seq2, seq1
+
     completed_matrix, alignment_cost = edit_distance_algorithm(seq1, seq2, banded_width, match_award, indel_penalty, sub_penalty)
     aligned_a, aligned_b = perform_alignment(completed_matrix, seq1, seq2, match_award, indel_penalty, sub_penalty, gap)
     return alignment_cost, aligned_a, aligned_b
