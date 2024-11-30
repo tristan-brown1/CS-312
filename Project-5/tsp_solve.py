@@ -54,8 +54,11 @@ def random_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
 
 
 def greedy_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    return []
 
+
+
+    return random_tour(edges, timer)
+#     return []
 
 def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
     return []
