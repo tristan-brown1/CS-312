@@ -107,3 +107,10 @@ def score_tour(tour: Tour, edges: list[list[float]]) -> float:
     for s, t in get_segments(tour):
         score += edges[s][t]
     return score
+
+
+def score_partial_tour(partial_tour: Tour, edges: list[list[float]]) -> float:
+    score = 0
+    for s, t in get_segments(partial_tour)[:-1]:  # exclude the back-to-initial leg
+        score += edges[s][t]
+    return score

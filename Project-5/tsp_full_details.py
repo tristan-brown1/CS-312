@@ -1,8 +1,9 @@
 import matplotlib.pyplot as plt
 
-from tsp_core import (generate_network, Timer, Solver, SolutionStats)
+from tsp_core import (generate_network, Timer, Solver)
 from tsp_plot import (plot_network, plot_tour, plot_solutions, plot_coverage,
-                      plot_solution_progress_compared, plot_queue_size, plot_solution_progress, plot_solution_evolution,
+                      plot_queue_size,
+                      plot_solution_evolution,
                       plot_edge_probability)
 from tsp_run import format_text_summary, format_plot_summary
 
@@ -41,11 +42,6 @@ def main(n, find_tour: Solver, timeout=60, **kwargs):
     # Plot stats
     plot_solutions({name: stats}, axs[1])
 
-    plot_solution_progress(
-        [st.tour for st in stats],
-        edges, ax=axs[2]
-    )
-
     plot_coverage({name: stats}, ax=axs[3])
     plot_queue_size({name: stats}, ax=axs[4])
     plot_edge_probability({name: stats}, edges, ax=axs[5])
@@ -57,12 +53,12 @@ if __name__ == '__main__':
     from tsp_solve import (random_tour, greedy_tour, dfs, branch_and_bound, branch_and_bound_smart)
 
     main(
-        10,
+        15,
         # random_tour,
-        greedy_tour,
+        # greedy_tour,
         # dfs,
         # branch_and_bound,
-        # branch_and_bound_smart,
+        branch_and_bound_smart,
         euclidean=True,
         reduction=0.2,
         normal=False,

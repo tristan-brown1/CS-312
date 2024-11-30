@@ -2,8 +2,7 @@ import functools
 import math
 
 import matplotlib.pyplot as plt
-from tsp_core import get_segments, Location, Tour, SolutionStats
-from tsp_solve import ReducedPartialPath
+from tsp_core import get_segments, Location, Tour, SolutionStats, score_tour, score_partial_tour
 
 
 def add_axes(func):
@@ -50,6 +49,9 @@ def plot_network(locations, edges, edge_alpha=0.5, edge_weight_limit=10, ax=None
 
 @add_axes
 def plot_tour(locations: list[Location], tour: Tour, ax=None):
+    _scatter_locations(locations, ax)
+    if not tour:
+        return
     segments = get_segments(tour)
 
     for s, t in segments:
@@ -132,43 +134,23 @@ def plot_edge_probability(
 
 
 @add_axes
-def plot_solution_progress(
-        solutions: list[list[int]],
-        edges: list[list[float]],
-        ax=None
-):
-    for solution in solutions:
-        xx = range(len(solution))
-        pp = ReducedPartialPath.create_from_edges(edges, solution[0])
-        yy = [pp.cost]
-
-        for i in range(1, len(solution)):
-            pp = pp._expand_child(solution[i - 1], solution[i])
-            yy.append(pp.cost)
-
-        ax.plot(xx, yy, marker='o')
-        ax.set_xlabel('Node in solution')
-        ax.set_ylabel('Lower bound on partial path')
-
-
-@add_axes
 def plot_solution_progress_compared(
         solutions: dict[str, list[int]],
         edges: list[list[float]],
         ax=None
 ):
     for name, solution in solutions.items():
-        xx = range(len(solution))
-        pp = ReducedPartialPath.create_from_edges(edges, solution[0])
-        yy = [pp.cost]
+        xx = range(len(solution)+1)  # +1 for return-to-initial-node
+        yy = [0]
 
         for i in range(1, len(solution)):
-            pp = pp._expand_child(solution[i - 1], solution[i])
-            yy.append(pp.cost)
+            pp = solution[:i]
+            yy.append(score_partial_tour(pp, edges))
+        yy.append(score_tour(solution, edges))
 
         ax.plot(xx, yy, marker='o')
         ax.set_xlabel('Node in solution')
-        ax.set_ylabel('Lower bound on partial path')
+        ax.set_ylabel('Score for partial path')
 
     ax.legend(labels=solutions.keys())
 

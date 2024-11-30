@@ -3,7 +3,7 @@ import math
 import matplotlib.pyplot as plt
 
 from tsp_core import (generate_network, Timer, Solver, SolutionStats)
-from tsp_plot import (plot_solutions, plot_solution_progress_compared, plot_queue_size)
+from tsp_plot import (plot_solutions, plot_solution_progress_compared, plot_tour)
 
 
 def format_text_summary(name: str, stats: SolutionStats):
@@ -32,6 +32,8 @@ def main(n, *find_tours: Solver, timeout=60, **kwargs):
     locations, edges = generate_network(n, **kwargs)
 
     # Solve
+    print('Running TSP Solvers...')
+
     all_stats = {}
     find_tour: Solver
     for find_tour in find_tours:
@@ -46,7 +48,8 @@ def main(n, *find_tours: Solver, timeout=60, **kwargs):
             print()
 
     # Report and Plot
-    n_plots = 2
+    n_plots = 2  # solutions, solution progress
+    n_plots += len(all_stats)  # tours
 
     fig, axs = plt.subplots(n_plots, 1, figsize=(8, 8 * n_plots))
     axs = axs.flatten()
@@ -60,6 +63,10 @@ def main(n, *find_tours: Solver, timeout=60, **kwargs):
             if not math.isinf(all_stats[name][-1].score)
         }, edges, ax=axs[1])
 
+    for (name, stats), ax in zip(all_stats.items(), axs[2:]):
+        plot_tour(locations, stats[-1].tour, ax=ax)
+        ax.set_title(f'{name} ({stats[-1].score})')
+
     plt.show()
 
 
@@ -67,15 +74,15 @@ if __name__ == '__main__':
     from tsp_solve import (random_tour, greedy_tour, dfs, branch_and_bound, branch_and_bound_smart)
 
     main(
-        20,
-        random_tour,
-        greedy_tour,
-        dfs,
+        50,
+        # random_tour,
+        # greedy_tour,
+        # dfs,
         branch_and_bound,
         branch_and_bound_smart,
         euclidean=True,
         reduction=0.2,
         normal=False,
-        seed=312,
+        seed=4321,
         timeout=10
     )
