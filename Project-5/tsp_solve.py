@@ -15,8 +15,13 @@ def random_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
         if timer.time_out():
             return stats
 
+
+
+
+
         tour = random.sample(list(range(len(edges))), len(edges))
         n_nodes_expanded += 1
+
 
         cost = score_tour(tour, edges)
         if math.isinf(cost):
@@ -24,10 +29,15 @@ def random_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
             cut_tree.cut(tour)
             continue
 
+
         if stats and cost > stats[-1].score:
             n_nodes_pruned += 1
             cut_tree.cut(tour)
             continue
+
+
+
+
 
         stats.append(SolutionStats(
             tour=tour,
@@ -52,15 +62,64 @@ def random_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
             cut_tree.fraction_leaves_covered()
         )]
 
+def greedy_pathfinder(starting_row, edges):
+    path = []
+    visited = set()
+    path.append(starting_row)
+    visited.add(starting_row)
+
+    while len(visited) < len(edges):
+
+        candidates = [(weight, index) for index, weight in enumerate(edges[starting_row]) if
+                      index not in visited and weight != float('inf')]
+
+        if not candidates:
+            # no valid path remaining
+            return None
+
+        weight, next_row = min(candidates)
+        visited.add(next_row)
+        path.append(next_row)
+        starting_row = next_row
+
+    return path
 
 def greedy_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+    stats = []
+    n_nodes_expanded = 0
+    n_nodes_pruned = 0
+    cut_tree = CutTree(len(edges))
+
+    i = 0
+    while True:
+        if timer.time_out():
+            return stats
 
 
+        potential_tour = greedy_pathfinder(i, edges)
+        if potential_tour is None:
+            i += 1
+            continue
+        else:
+            tour = greedy_pathfinder(i, edges)
+            cost = score_tour(tour, edges)
 
-    return random_tour(edges, timer)
-#     return []
+            stats.append(SolutionStats(
+                tour=tour,
+                score=cost,
+                time=timer.time(),
+                max_queue_size=1,
+                n_nodes_expanded=n_nodes_expanded,
+                n_nodes_pruned=n_nodes_pruned,
+                n_leaves_covered=cut_tree.n_leaves_cut(),
+                fraction_leaves_covered=cut_tree.fraction_leaves_covered()
+            ))
+
+            return stats
+
 
 def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+    
     return []
 
 
