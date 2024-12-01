@@ -118,9 +118,49 @@ def greedy_tour(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
             return stats
 
 
+def dfs_alg(start_node, visited, edges, current_cost, path):
+    current_node = start_node
+    if all(visited):
+        return current_cost + edges[current_node][start_node], path
+
+    min_cost = float('inf')
+    min_cost_path = []
+
+    for next_city in range(0, len(edges)):
+        if not visited[next_city]:
+            visited[next_city] = True
+            cost = edges[current_node][next_city]
+            total_cost, sub_path = dfs_alg(next_city, visited, edges, current_cost + cost, path + [next_city])
+            if total_cost < min_cost:
+                min_cost = total_cost
+                min_cost_path = sub_path
+            visited[next_city] = False
+    print(min_cost_path)
+    return min_cost, min_cost_path
+
 def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    
-    return []
+    stats = []
+    n_nodes_expanded = 0
+    n_nodes_pruned = 0
+    cut_tree = CutTree(len(edges))
+
+    start_node = 0
+    visited = [False] * len(edges)
+    cost, tour = dfs_alg(start_node, visited, edges, 0, [])
+    cost = score_tour(tour, edges)
+
+    stats.append(SolutionStats(
+        tour=tour,
+        score=cost,
+        time=timer.time(),
+        max_queue_size=1,
+        n_nodes_expanded=n_nodes_expanded,
+        n_nodes_pruned=n_nodes_pruned,
+        n_leaves_covered=cut_tree.n_leaves_cut(),
+        fraction_leaves_covered=cut_tree.fraction_leaves_covered()
+    ))
+
+    return stats
 
 
 def branch_and_bound(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
