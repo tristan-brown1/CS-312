@@ -135,7 +135,6 @@ def dfs_alg(start_node, visited, edges, current_cost, path):
                 min_cost = total_cost
                 min_cost_path = sub_path
             visited[next_city] = False
-    print(min_cost_path)
     return min_cost, min_cost_path
 
 def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
@@ -143,6 +142,61 @@ def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
     n_nodes_expanded = 0
     n_nodes_pruned = 0
     cut_tree = CutTree(len(edges))
+
+    start_node = 0
+    visited = [False] * len(edges)
+    dfs_answer = dfs_alg(start_node, visited, edges, 0, [])
+    tour = dfs_answer[1]
+    cost = score_tour(tour, edges)
+
+
+
+    # take current dfs implementation and move the calculation of the min path to this part of the logic
+
+
+    stats.append(SolutionStats(
+        tour=tour,
+        score=cost,
+        time=timer.time(),
+        max_queue_size=1,
+        n_nodes_expanded=n_nodes_expanded,
+        n_nodes_pruned=n_nodes_pruned,
+        n_leaves_covered=cut_tree.n_leaves_cut(),
+        fraction_leaves_covered=cut_tree.fraction_leaves_covered()
+    ))
+
+    return stats
+
+
+def reduce_matrix(matrix) -> tuple[float, list[SolutionStats]]:
+
+    pass
+
+def expand() -> list[SolutionStats]:
+
+    pass
+
+def bnb_logic(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+
+    pass
+
+def branch_and_bound(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
+    stats = []
+    n_nodes_expanded = 0
+    n_nodes_pruned = 0
+    cut_tree = CutTree(len(edges))
+
+    #clean up dfs logic get it completely fleshed out and clean
+
+    #write out hollow bnb logic using dfs but with updated lower bound in order to prune the queue that feeds into bnb
+
+    #flesh out elements added from bnb
+        #reduce matrix
+        #extracting lower bound
+        #bnb logic
+
+
+
 
     start_node = 0
     visited = [False] * len(edges)
@@ -159,12 +213,10 @@ def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
         n_leaves_covered=cut_tree.n_leaves_cut(),
         fraction_leaves_covered=cut_tree.fraction_leaves_covered()
     ))
-
     return stats
 
 
-def branch_and_bound(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
-    return []
+
 
 
 def branch_and_bound_smart(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
