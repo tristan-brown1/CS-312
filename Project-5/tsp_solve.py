@@ -1,5 +1,6 @@
 import math
 import random
+import numpy as np
 from email.policy import default
 
 from ply.yacc import token
@@ -175,6 +176,10 @@ def dfs(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
     return stats
 
 
+
+
+
+
 def calculate_lower_bound(n, visited, edges):
     cost = 0
     for node in range(n):
@@ -237,6 +242,12 @@ def branch_and_bound(edges: list[list[float]], timer: Timer) -> list[SolutionSta
     ))
 
     return stats
+
+
+
+
+
+
 
 
 def branch_and_bound_smart(edges: list[list[float]], timer: Timer) -> list[SolutionStats]:
