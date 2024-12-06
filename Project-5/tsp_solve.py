@@ -272,7 +272,7 @@ def local_search(tour, edges):
     best_cost = score_tour(tour, edges)
     for i in range(len(tour) - 1):
         for j in range(i + 1, len(tour)):
-            new_tour = best_tour[:i] + best_tour[i:j+1][::-1] + best_tour[j+1:]
+            new_tour = best_tour[:i] + best_tour[i:j + 1][::-1] + best_tour[j + 1:]
             new_cost = score_tour(new_tour, edges)
             if new_cost < best_cost:
                 best_tour, best_cost = new_tour, new_cost
