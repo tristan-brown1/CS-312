@@ -4,7 +4,7 @@ from byu_pytest_utils import max_score
 from tsp_core import Timer, generate_network, score_tour
 from math import inf
 
-from tsp_solve import greedy_tour, dfs, branch_and_bound, branch_and_bound_smart
+from tsp_solve import greedy_tour, dfs, branch_and_bound, branch_and_bound_smart, random_tour
 
 """ 
 ---- IMPORTANT ----
@@ -149,3 +149,5 @@ def test_extra_credit_branch_and_bound_smart():
     # got a score of 7.038 in 10 seconds
     # If you beat this score, you get extra credit
     assert stats[-1].score < 7.039
+
+
